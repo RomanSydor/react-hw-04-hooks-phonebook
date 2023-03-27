@@ -1,30 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import Section from "./components/Section";
 import AddContact from "./components/AddContact";
 import ContactList from "./components/ContactList";
 import Filter from "./components/Filter";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
   const [filter, setFilter] = useState("");
-
-  useEffect(() => {
-    const contacts = localStorage.getItem("contacts");
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      console.log("test");
-
-      setContacts(parsedContacts);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-  }, [contacts]);
+  const [contacts, setContacts] = useLocalStorage("contacts", []);
 
   const addContact = (id, name, number) => {
     if (isContactExists(name)) {
@@ -39,9 +23,6 @@ const App = () => {
     };
 
     setContacts((prevContacts) => [contact, ...prevContacts]);
-
-    setName(name);
-    setNumber(number);
   };
 
   const deleteContact = (id) => {
